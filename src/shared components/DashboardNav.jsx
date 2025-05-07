@@ -1,15 +1,16 @@
 import { Link, NavLink } from "react-router-dom";
-import logo from '../assets/logo.png'
+import logo from "../assets/logo.png";
 import { CiEdit, CiViewTimeline } from "react-icons/ci";
 import { IoIosContacts } from "react-icons/io";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { MdManageAccounts } from "react-icons/md";
 import { TbPremiumRights } from "react-icons/tb";
 import { FcApprove } from "react-icons/fc";
-import { FaLitecoinSign } from "react-icons/fa6";
-
+import useAuthInfo from "./../hooks/useAuthInfo";
 
 const DashboardNav = () => {
+  const { signOutUser } = useAuthInfo();
+
   return (
     <aside className=" px-4 pt-6 pb-20 w-60 md:w-[350px] bg-secondary">
       <div>
@@ -48,10 +49,12 @@ const DashboardNav = () => {
           approved contact request
         </NavLink>
         <hr className="w-full h-1 border-t border-primary my-10" />
-        <NavLink to={"/signUp"}>
-          Sign UP
-        </NavLink>
-
+        <button
+          onClick={signOutUser}
+          className="secondaryBtn border border-primary"
+        >
+          Log Out
+        </button>
       </nav>
     </aside>
   );

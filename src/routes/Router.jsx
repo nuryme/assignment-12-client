@@ -15,6 +15,8 @@ import AdminDashboard from "../pages/admin dashboard/AdminDashboard";
 import ManageUsers from "../pages/admin dashboard/ManageUsers";
 import ApprovedPremiumRequest from "../pages/admin dashboard/ApprovedPremiumRequest";
 import ApprovedContactRequest from "../pages/admin dashboard/ApprovedContactRequest";
+import PrivateRouter from "./PrivateRouter";
+import CheckOut from "../pages/main/CheckOut";
 
 const routes = createBrowserRouter([
     {
@@ -39,14 +41,18 @@ const routes = createBrowserRouter([
                 element: <SignUp></SignUp>
             },
             {
-                path: '/details/1',
-                element: <Details></Details>
+                path: '/details/:id',
+                element: <PrivateRouter><Details></Details></PrivateRouter>
+            },
+            {
+                path: '/checkout/:id',
+                element: <PrivateRouter><CheckOut></CheckOut></PrivateRouter>
             }
         ]
     },
     {
         path: '/dashboard',
-        element: <Dashboard></Dashboard>,
+        element: <PrivateRouter><Dashboard></Dashboard></PrivateRouter>,
         errorElement: <ErrorPage></ErrorPage>,
         children: [
             {
@@ -55,7 +61,7 @@ const routes = createBrowserRouter([
             },
             {
                 path: 'edit',
-                element: <Edit></Edit>
+                element: <PrivateRouter><Edit></Edit></PrivateRouter>
             },
             {
                 path: 'view',

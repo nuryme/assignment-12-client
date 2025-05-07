@@ -1,29 +1,39 @@
-import React from "react";
 import { Link } from "react-router";
+import Loading from "../pages/Loading";
 
-const Card = () => {
+const Card = ({ bio, isLoading }) => {
+  if (isLoading) return <Loading></Loading>;
+
+  console.log(bio);
   return (
-    <div className="w-full max-w-xs bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
-      <img
-        className="w-full h-56 object-cover"
-        src="https://i.pravatar.cc/300?img=5"
-        alt="Profile"
-      />
-      <div className="p-4 space-y-2">
-        <h4 className="">Biodata ID: 1</h4>
-        <p className="text-gray-600">
-          Type: <span className="font-medium">Male</span>
-        </p>
-        <p className="text-gray-600">
-          Division: <span className="font-medium">Dhaka</span>
-        </p>
-        <p className="text-gray-600">
-          Age: <span className="font-medium">30</span>
-        </p>
-        <p className="text-gray-600">
-          Occupation: <span className="font-medium">Job</span>
-        </p>
-        <Link to={'/details/1'} className="flex justify-center mt-6">
+    <div className="w-full max-w-md bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200 flex flex-col group">
+      <div className="h-56 overflow-hidden">
+        <img
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          src={bio.image}
+          alt="Profile"
+        />
+      </div>
+      <div className="p-4  flex flex-col flex-grow">
+        <div className="space-y-2 flex flex-col flex-grow">
+          <h4 className="">Bio data ID: {bio.bioId}</h4>
+          <p className="text-gray-600">
+            Type: <span className="font-medium">{bio.type}</span>
+          </p>
+          <p className="text-gray-600">
+            Division: <span className="font-medium">{bio.present_address}</span>
+          </p>
+          <p className="text-gray-600">
+            Age: <span className="font-medium">{bio.age}</span>
+          </p>
+          <p className="text-gray-600 ">
+            Occupation: <span className="font-medium">{bio.occupation}</span>
+          </p>
+        </div>
+        <Link
+          to={`/details/${bio.bioId}`}
+          className="flex justify-center mt-6 "
+        >
           <button className="primaryBtn">View Profile</button>
         </Link>
       </div>

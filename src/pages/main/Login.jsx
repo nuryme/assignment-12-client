@@ -1,7 +1,32 @@
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import SectionTitleUnderline from "../../shared components/SectionTitleUnderline";
+import toast from "react-hot-toast";
+import Loading from "../Loading";
+import useAuthInfo from "../../hooks/useAuthInfo";
 
 const Login = () => {
+  const { existingUser, setUser, loading } = useAuthInfo();
+  const navigate = useNavigate();
+  const location = useLocation()
+  // console.log(location)
+
+  if(loading) return <Loading></Loading>
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    existingUser(email, password).then((res) => {
+      setUser(res.user);
+
+      toast.success("Sign in successful!");
+      navigate(location.state || "/");
+    });
+  };
+
   return (
     <div className=" mt-24 py-24 container  mx-auto">
       <SectionTitleUnderline
@@ -10,11 +35,20 @@ const Login = () => {
       ></SectionTitleUnderline>
       <div className="md:flex gap-20 justify-center mt-12">
         <div style={{ width: "500px", height: "500px" }}>
-          <img className="w-full h-full object-cover" src="https://i.pinimg.com/736x/1f/8f/5c/1f8f5cee30f4a0a371db7d3482b56526.jpg" alt="" />
+          <img
+            className="w-full h-full object-cover"
+            src="https://i.pinimg.com/736x/1f/8f/5c/1f8f5cee30f4a0a371db7d3482b56526.jpg"
+            alt=""
+          />
         </div>
 
         <div className="w-full max-w-lg p-8 space-y-3 rounded-xl bg-secondary/50 ">
-          <form noValidate="" action="" className="space-y-6">
+          <form
+            onSubmit={handleSubmit}
+            noValidate=""
+            action=""
+            className="space-y-6"
+          >
             <div className="space-y-1">
               <label htmlFor="username" className="block font-medium">
                 Email

@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router";
 import logo from "../assets/logo.png";
+import useAuthInfo from "../hooks/useAuthInfo";
 
 const Navbar = () => {
   const [dropDown, setDropDown] = useState(false);
   const mobileMenuRef = useRef(null);
+  const {user , signOutUser} = useAuthInfo()
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -40,9 +42,20 @@ const Navbar = () => {
           <img className="w-full" src={logo} alt="" />
         </Link>
         <ul className="items-stretch hidden space-x-3 lg:flex">{links}</ul>
-        <div className="items-center flex-shrink-0 flex">
-          <Link to={'/login'}><button className="primaryBtn">Login</button></Link>
-          <Link to={'/dashboard'}><button className="primaryBtn">Dashboard</button></Link>
+        <div className="items-center flex-shrink-0 flex gap-2">
+          {
+            user ? <>
+            <img onClick={() => {
+              signOutUser()
+            }
+            } title="Log Out" src={user?.photoURL} className="w-12 h-12 object-cover rounded-full cursor-pointer" alt="" />
+            <Link to={'/dashboard'}><button className="primaryBtn">Dashboard</button></Link></> : <>
+            <Link to={'/login'}><button className="primaryBtn">Login</button></Link>
+            <Link to={'/signUp'}><button className="secondaryBtn border border-primary">Sign Up</button></Link>
+            </>
+          }
+          
+          
         </div>
         <div ref={mobileMenuRef} className="lg:hidden relative">
           <button

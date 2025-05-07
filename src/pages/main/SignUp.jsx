@@ -1,27 +1,39 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import SectionTitleUnderline from "../../shared components/SectionTitleUnderline";
-import AuthInfo from "../../hooks/AuthInfo";
+import toast from "react-hot-toast";
+import useAuthInfo from "../../hooks/useAuthInfo";
 
 const SignUp = () => {
-  const {newUser} = AuthInfo()
+  const { newUser, setUser, updateUser } = useAuthInfo();
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const form = e.target
-    const name = form.name.value
-    const email = form.email.value
-    const password = form.password.value
-    const image = form.image.value
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const image = form.image.value;
 
-    const user = {name, email, password, image}
+    // const user = { name, email, password, image };
 
-    console.log(user)
-  }
-  
+    newUser(email, password)
+    .then((res) => {
+      setUser(res.user)
 
-  console.log(name)
+      updateUser(name, image)
+      .then(() => {
+        toast.success('Sign up successful!')
+        navigate('/')
+      }
+      )
+    }
+    )
+
+  };
+
   return (
     <div className=" mt-24 py-24 container  mx-auto">
       <SectionTitleUnderline
@@ -30,63 +42,56 @@ const SignUp = () => {
       ></SectionTitleUnderline>
       <div className=" max-w-2xl p-8 space-y-3 rounded-xl bg-secondary/50 mx-auto mt-12 shadow-2xl">
         <form
-        onSubmit={handleSubmit}
+          onSubmit={handleSubmit}
           noValidate=""
           action=""
           className="container flex flex-col mx-auto space-y-12"
         >
           <fieldset className="space-y-4">
             <div className="">
-              <label  className="">
-                Name
-              </label>
+              <label className="">Name</label>
               <input
-              name="name"
+                name="name"
                 type="text"
                 placeholder="your name"
                 className="w-full bg-white placeholder:text-gray-400 py-2 px-4 focus:outline-primary rounded-md mt-2"
               />
             </div>
             <div className="">
-              <label  className="">
-                Email
-              </label>
+              <label className="">Email</label>
               <input
-              name="email"
+                name="email"
                 type="email"
                 placeholder="your email"
                 className="w-full bg-white placeholder:text-gray-400 py-2 px-4 focus:outline-primary rounded-md mt-2"
               />
             </div>
             <div className="">
-              <label  className="">
-                Password
-              </label>
+              <label className="">Password</label>
               <input
-              name="password"
+                name="password"
                 type="password"
                 placeholder="your password"
                 className="w-full bg-white placeholder:text-gray-400 py-2 px-4 focus:outline-primary rounded-md mt-2"
               />
             </div>
             <div className="">
-              <label  className="">
-                Photo
-              </label>
+              <label className="">Photo</label>
               <input
-              name="image"
+                name="image"
                 type="url"
                 placeholder="past photo url"
                 className="w-full bg-white placeholder:text-gray-400 py-2 px-4 focus:outline-primary rounded-md mt-2"
               />
             </div>
-            
-            
+            <button className="primaryBtn w-full rounded-md">Sign in</button>
           </fieldset>
         </form>
         <div className="flex items-center pt-4 space-x-1">
           <div className="flex-1 h-px sm:w-16 bg-primary"></div>
-          <p className="px-3 dark:text-gray-600">Sign Up with social accounts</p>
+          <p className="px-3 dark:text-gray-600">
+            Sign Up with social accounts
+          </p>
           <div className="flex-1 h-px sm:w-16 bg-primary"></div>
         </div>
         <div className="flex justify-center space-x-4">
