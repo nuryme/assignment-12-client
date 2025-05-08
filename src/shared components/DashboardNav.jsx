@@ -7,6 +7,7 @@ import { MdManageAccounts } from "react-icons/md";
 import { TbPremiumRights } from "react-icons/tb";
 import { FcApprove } from "react-icons/fc";
 import useAuthInfo from "./../hooks/useAuthInfo";
+import { FaCircleUser } from "react-icons/fa6";
 
 const DashboardNav = () => {
   const { signOutUser } = useAuthInfo();
@@ -55,6 +56,11 @@ const DashboardNav = () => {
         >
           Log Out
         </button>
+        <NavLink to={"/dashboard/profile"}>
+          <FaCircleUser />
+          Profile
+        </NavLink>
+
       </nav>
     </aside>
   );

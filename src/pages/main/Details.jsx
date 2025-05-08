@@ -1,6 +1,4 @@
-import { BsEnvelopeArrowUp } from "react-icons/bs";
 import height from "../../assets/height.png";
-import { CiMobile4 } from "react-icons/ci";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
@@ -25,11 +23,17 @@ const Details = () => {
     type: data?.type,
   });
 
+  const handleFavorite = (id) => {
+    console.log(id)
+  }
+  
+
+
   if (isLoading || loading) return <Loading></Loading>;
 
   if (isError) return <ErrorPage></ErrorPage>;
 
-  console.log(bio_data);
+  // console.log(bio_data);
   // console.log(data);
   return (
     <div className="my-24">
@@ -104,7 +108,7 @@ const Details = () => {
               </div>
             </div>
 
-            <h5 className="uppercase mt-12">contact information</h5>
+            {/* <h5 className="uppercase mt-12">contact information</h5>
             <div className="mt-2 space-y-2">
               <div className="flex items-center gap-4">
                 <div className=" border border-secondary p-3 rounded-lg w-fit">
@@ -122,7 +126,7 @@ const Details = () => {
                   Email: <span className="font-normal">{data.email}</span>
                 </p>
               </div>
-            </div>
+            </div> */}
 
             <h5 className="uppercase mt-12">Personal information</h5>
             <div className="mt-2 space-y-2 grid grid-cols-1 md:grid-cols-2">
@@ -158,7 +162,10 @@ const Details = () => {
 
             <div className="mt-6 space-x-6">
               <Link>
-                <button className="primaryBtn">💕 add to favorite</button>
+                <button onClick={() => {
+                  handleFavorite(data.bioId)
+                }
+                } className="primaryBtn">💕 add to favorite</button>
               </Link>
               <Link to={`/checkout/${id}`}>
                 <button className="secondaryBtn">
@@ -168,7 +175,7 @@ const Details = () => {
             </div>
           </div>
         </div>
-        <div className="grid justify-center grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 w-fit container mx-auto">
+        <div className="grid justify-center grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 container mx-auto">
           {bio_data.map((bio) => (
             <div
               key={bio._id}
@@ -181,8 +188,8 @@ const Details = () => {
               />
               <div className="p-6 space-y-2">
                 <h3 className="text-2xl font-semibold ">{bio.name}</h3>
-                <span className="text-xs dark:text-gray-600">
-                  {format(new Date(data.date_of_birth), "MM/dd/yyyy")}
+                <span className="">
+                  <span className="text-black font-bold">Birth date: </span>{format(new Date(data.date_of_birth), "MM/dd/yyyy")}
                 </span>
               </div>
             </div>

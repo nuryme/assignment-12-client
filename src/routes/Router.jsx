@@ -17,6 +17,7 @@ import ApprovedPremiumRequest from "../pages/admin dashboard/ApprovedPremiumRequ
 import ApprovedContactRequest from "../pages/admin dashboard/ApprovedContactRequest";
 import PrivateRouter from "./PrivateRouter";
 import CheckOut from "../pages/main/CheckOut";
+import Profile from "../pages/Profile";
 
 const routes = createBrowserRouter([
     {
@@ -86,6 +87,10 @@ const routes = createBrowserRouter([
             {
                 path: 'approved-contact-request',
                 element: <ApprovedContactRequest></ApprovedContactRequest>
+            },
+            {
+                path: 'profile',
+                element: <Profile></Profile>
             }
         ]
     }

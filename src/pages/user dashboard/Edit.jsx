@@ -3,27 +3,38 @@ import SectionTitleFlower from "../../shared components/SectionTitleFlower";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import useAuthInfo from "../../hooks/useAuthInfo";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery} from "@tanstack/react-query";
 import useAxiosSecure from "./../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
+import Loading from "../Loading";
 
 const Edit = () => {
   const [startDate, setStartDate] = useState(new Date());
   const { user } = useAuthInfo();
   const axiosSecure = useAxiosSecure();
 
+  const {data: bio = {}, isLoading} = useQuery({
+    queryKey: ['view-bio'],
+    queryFn: async () => await axiosSecure.get(`/view-bio/${user?.email}`).then(res => res.data)
+  })
+
+  console.log(bio)
+
   const { mutate, isPending } = useMutation({
     mutationKey: ["bio-data"],
     mutationFn: async (data) =>
-      await axiosSecure.post("/bio-data", data).then((res) => res.data),
+      await axiosSecure.patch(`/bio-data/${bio?.bioId}`, data).then((res) => res.data),
     onSuccess: (data) => {
       // console.log(data);
-      if(data.insertedId) {
-        toast.success('Saved Successfully')
+      if(data.result.insertedId) {
+        toast.success(data.message)
+      }
+      else if(data.result.modifiedCount>0) {
+        toast.success(data.message)
       }
     },
     onError: (err) => {
-      console.log(err.message);
+      console.log(err);
     },
   });
 
@@ -40,13 +51,18 @@ const Edit = () => {
     bioInfo.expected_weight = parseInt(bioInfo.expected_weight);
     bioInfo.height = parseInt(bioInfo.height);
     bioInfo.weight = parseInt(bioInfo.weight);
-    bioInfo.number = parseInt(bioInfo.number);
     bioInfo.date_of_birth = startDate
 
-    console.log(bioInfo);
+    // console.log(bioInfo);
+
+    // if(filterEmail) {
+    //   return toast.error('Bio data already exist')
+    // }
 
     mutate(bioInfo);
   };
+
+  if(isLoading) return <Loading></Loading>
 
   return (
     <div className="">
@@ -63,14 +79,14 @@ const Edit = () => {
           </label>
           <select
             required
-            defaultValue={""}
+            defaultValue={bio?.type || ''}
             className="bg-white w-full rounded-md px-4 py-3.5"
             name="type"
             id=""
           >
             <option value="" readOnly>male or female</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
           </select>
         </div>
         <div className="space-y-1">
@@ -81,7 +97,7 @@ const Edit = () => {
             type="text"
             name="name"
             required
-            placeholder="your name"
+            defaultValue={bio?.name || "your name"}
             className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
           />
         </div>
@@ -93,7 +109,7 @@ const Edit = () => {
             type="url"
             name="image"
             required
-            placeholder="your photo URL"
+            defaultValue={bio?.image || "your photo URL"}
             className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
           />
         </div>
@@ -106,7 +122,7 @@ const Edit = () => {
             <DatePicker
               required
               className="px-4 py-3 "
-              selected={startDate}
+              selected={bio?.date_of_birth || startDate}
               onChange={(date) => setStartDate(date)}
             />
           </div>
@@ -117,7 +133,7 @@ const Edit = () => {
           </label>
           <select
             required
-            defaultValue={""}
+            defaultValue={bio?.height || ""}
             className="bg-white w-full rounded-md px-4 py-3.5"
             name="height"
             id=""
@@ -155,7 +171,7 @@ const Edit = () => {
           </label>
           <select
             required
-            defaultValue={""}
+            defaultValue={bio?.weight || ""}
             className="bg-white w-full rounded-md px-4 py-3.5"
             name="weight"
             id=""
@@ -181,7 +197,7 @@ const Edit = () => {
             type="number"
             name="age"
             required
-            placeholder="your age"
+            defaultValue={bio?.age || "your age"}
             className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
           />
         </div>
@@ -193,7 +209,7 @@ const Edit = () => {
             type="text"
             name="occupation"
             required
-            placeholder="your occupation"
+            defaultValue={bio?.occupation || 'your occupation'}
             className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
           />
         </div>
@@ -203,7 +219,7 @@ const Edit = () => {
           </label>
           <select
             required
-            defaultValue={""}
+            defaultValue={bio?.race || ""}
             className="bg-white w-full rounded-md px-4 py-3.5 capitalize"
             name="race"
             id=""
@@ -228,7 +244,7 @@ const Edit = () => {
             type="text"
             name="father_name"
             required
-            placeholder="your father's name"
+            defaultValue={bio?.father_name || "your father's name"}
             className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
           />
         </div>
@@ -240,7 +256,7 @@ const Edit = () => {
             type="text"
             name="mother_name"
             required
-            placeholder="your mother's name"
+            defaultValue={bio?.mother_name || "your mother's name"}
             className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
           />
         </div>
@@ -251,7 +267,7 @@ const Edit = () => {
           </label>
           <select
             required
-            defaultValue={""}
+            defaultValue={bio?.permanent_address || ""}
             className="bg-white w-full rounded-md px-4 py-3.5 capitalize"
             name="permanent_address"
             id=""
@@ -272,7 +288,7 @@ const Edit = () => {
           </label>
           <select
             required
-            defaultValue={""}
+            defaultValue={bio?.present_address || ""}
             className="bg-white w-full rounded-md px-4 py-3.5 capitalize"
             name="present_address"
             id=""
@@ -296,7 +312,7 @@ const Edit = () => {
             type="number"
             name="expected_age"
             required
-            placeholder="age you're expecting"
+            defaultValue={bio?.expected_age || "age you're expecting"}
             className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
           />
         </div>
@@ -307,7 +323,7 @@ const Edit = () => {
           </label>
           <select
             required
-            defaultValue={""}
+            defaultValue={bio?.expected_height || ""}
             className="bg-white w-full rounded-md px-4 py-3.5"
             name="expected_height"
             id=""
@@ -346,7 +362,7 @@ const Edit = () => {
           </label>
           <select
             required
-            defaultValue={""}
+            defaultValue={bio?.expected_weight || ""}
             className="bg-white w-full rounded-md px-4 py-3.5"
             name="expected_weight"
             id=""
@@ -386,7 +402,7 @@ const Edit = () => {
             type="number"
             name="number"
             required
-            placeholder="your mobile number"
+            defaultValue={bio?.number || "your mobile number"}
             className="w-full px-4 py-3 rounded-md dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800 focus:dark:border-violet-600"
           />
         </div>

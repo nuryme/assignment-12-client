@@ -95,8 +95,8 @@ const AllBios = () => {
                 id=""
               >
                 <option value="">male or female</option>
-                <option value="male">male</option>
-                <option value="female">female</option>
+                <option value="Male">male</option>
+                <option value="Female">female</option>
               </select>
             </fieldset>
             <fieldset className="w-full space-y-1 dark:text-gray-800">
