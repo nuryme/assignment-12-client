@@ -2,8 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router";
 import logo from "../assets/logo.png";
 import useAuthInfo from "../hooks/useAuthInfo";
+import useRole from "../hooks/useRole";
+import Loading from "../pages/Loading";
 
 const Navbar = () => {
+  const {role, isLoading} = useRole()
+
   const [dropDown, setDropDown] = useState(false);
   const mobileMenuRef = useRef(null);
   const {user , signOutUser} = useAuthInfo()
@@ -18,6 +22,7 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  if(isLoading) return <Loading></Loading>
   const links = (
     <>
       <li>
@@ -49,7 +54,7 @@ const Navbar = () => {
               signOutUser()
             }
             } title="Log Out" src={user?.photoURL} className="w-12 h-12 object-cover rounded-full cursor-pointer" alt="" />
-            <Link to={'/dashboard'}><button className="primaryBtn">Dashboard</button></Link></> : <>
+            <Link to={role === 'admin' ? '/dashboard/admin-dashboard' : '/dashboard/view'}><button className="primaryBtn">Dashboard</button></Link></> : <>
             <Link to={'/login'}><button className="primaryBtn">Login</button></Link>
             <Link to={'/signUp'}><button className="secondaryBtn border border-primary">Sign Up</button></Link>
             </>

@@ -23,7 +23,7 @@ const AllBios = () => {
     return bio.age >= min && bio.age <= max && filterType && filterDivision;
   });
 
-  console.log(bio_data)
+  // console.log(bio_data)
 
   const handleReset = (e) => {
     e.preventDefault()
@@ -88,7 +88,6 @@ const AllBios = () => {
                 onChange={(e) => {
                   setType(e.target.value);
                 }}
-                value={type}
                 defaultValue={""}
                 className="bg-white p-2 w-full rounded-md capitalize"
                 name=""

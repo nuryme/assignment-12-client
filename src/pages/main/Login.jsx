@@ -3,14 +3,15 @@ import SectionTitleUnderline from "../../shared components/SectionTitleUnderline
 import toast from "react-hot-toast";
 import Loading from "../Loading";
 import useAuthInfo from "../../hooks/useAuthInfo";
+import { saveUser } from "../../api/utils";
 
 const Login = () => {
-  const { existingUser, setUser, loading } = useAuthInfo();
+  const { existingUser, setUser, loading, googleSignIn } = useAuthInfo();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   // console.log(location)
 
-  if(loading) return <Loading></Loading>
+  if (loading) return <Loading></Loading>;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -83,7 +84,19 @@ const Login = () => {
             <div className="flex-1 h-px sm:w-16 bg-primary"></div>
           </div>
           <div className="flex justify-center space-x-4">
-            <button aria-label="Log in with Google" className="p-3 rounded-sm">
+            <button
+              onClick={() => {
+                googleSignIn().then((res) => {
+                  setUser(res.user);
+
+                  saveUser(res?.user);
+                  toast.success('Login Successful!')
+                  navigate(location.state || "/");
+                }).catch(err => console.log(err.message))
+              }}
+              aria-label="Log in with Google"
+              className="p-3 rounded-sm cursor-pointer"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 32 32"

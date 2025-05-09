@@ -1,14 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
-import MainLayout from './../layouts/MainLayout';
-import ErrorPage from './../pages/ErrorPage';
+import MainLayout from "./../layouts/MainLayout";
+import ErrorPage from "./../pages/ErrorPage";
 import Home from "../pages/main/Home";
-import AllBios from './../pages/main/AllBios';
+import AllBios from "./../pages/main/AllBios";
 import Login from "../pages/main/Login";
 import SignUp from "../pages/main/SignUp";
 import Details from "../pages/main/Details";
 import Dashboard from "../layouts/Dashboard";
 import Edit from "../pages/user dashboard/Edit";
-import View from '../pages/user dashboard/View';
+import View from "../pages/user dashboard/View";
 import MyContactRequest from "../pages/user dashboard/MyContactRequest";
 import MyFavorite from "../pages/user dashboard/MyFavorite";
 import AdminDashboard from "../pages/admin dashboard/AdminDashboard";
@@ -18,83 +18,112 @@ import ApprovedContactRequest from "../pages/admin dashboard/ApprovedContactRequ
 import PrivateRouter from "./PrivateRouter";
 import CheckOut from "../pages/main/CheckOut";
 import Profile from "../pages/Profile";
+import AdminRouter from "./AdminRouter";
+import Married from "../pages/user dashboard/Married";
 
 const routes = createBrowserRouter([
-    {
-        path: '/',
-        element: <MainLayout></MainLayout>,
-        errorElement: <ErrorPage></ErrorPage>,
-        children: [
-            {
-                path: '/',
-                element: <Home></Home>
-            },
-            {
-                path:'/allBios',
-                element: <AllBios></AllBios>
-            },
-            {
-                path: '/login',
-                element: <Login></Login>
-            },
-            {
-                path: '/signUp',
-                element: <SignUp></SignUp>
-            },
-            {
-                path: '/details/:id',
-                element: <PrivateRouter><Details></Details></PrivateRouter>
-            },
-            {
-                path: '/checkout/:id',
-                element: <PrivateRouter><CheckOut></CheckOut></PrivateRouter>
-            }
-        ]
-    },
-    {
-        path: '/dashboard',
-        element: <PrivateRouter><Dashboard></Dashboard></PrivateRouter>,
-        errorElement: <ErrorPage></ErrorPage>,
-        children: [
-            {
-                path: '/dashboard/admin-dashboard',
-                element: <AdminDashboard></AdminDashboard>
-            },
-            {
-                path: 'edit',
-                element: <PrivateRouter><Edit></Edit></PrivateRouter>
-            },
-            {
-                path: 'view',
-                element: <View></View>
-            },
-            {
-                path: 'my-contact-request',
-                element: <MyContactRequest></MyContactRequest>
-            },
-            {
-                path: 'my-favorite',
-                element: <MyFavorite></MyFavorite>
-            },
-            {
-                path: 'manage-users',
-                element: <ManageUsers></ManageUsers>
-            },
-            {
-                path: 'approved-premium',
-                element: <ApprovedPremiumRequest></ApprovedPremiumRequest>
-            },
-            {
-                path: 'approved-contact-request',
-                element: <ApprovedContactRequest></ApprovedContactRequest>
-            },
-            {
-                path: 'profile',
-                element: <Profile></Profile>
-            }
-        ]
-    }
-])
+  {
+    path: "/",
+    element: <MainLayout></MainLayout>,
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      {
+        path: "/",
+        element: <Home></Home>,
+      },
+      {
+        path: "/allBios",
+        element: <AllBios></AllBios>,
+      },
+      {
+        path: "/login",
+        element: <Login></Login>,
+      },
+      {
+        path: "/signUp",
+        element: <SignUp></SignUp>,
+      },
+      {
+        path: "/details/:id",
+        element: (
+          <PrivateRouter>
+            <Details></Details>
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "/checkout/:id",
+        element: (
+          <PrivateRouter>
+            <CheckOut></CheckOut>
+          </PrivateRouter>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRouter>
+        <Dashboard></Dashboard>
+      </PrivateRouter>
+    ),
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      //admin routes
+      {
+        path: "/dashboard/admin-dashboard",
+        element: (
+          <AdminRouter>
+            <AdminDashboard></AdminDashboard>
+          </AdminRouter>
+        ),
+      },
+      {
+        path: "manage-users",
+        element: <AdminRouter><ManageUsers></ManageUsers></AdminRouter>,
+      },
+      {
+        path: "approved-premium",
+        element: <AdminRouter><ApprovedPremiumRequest></ApprovedPremiumRequest></AdminRouter>,
+      },
+      {
+        path: "approved-contact-request",
+        element: <AdminRouter><ApprovedContactRequest></ApprovedContactRequest></AdminRouter>,
+      },
 
+      //user routes
+      {
+        path: "edit",
+        element: (
+          <PrivateRouter>
+            <Edit></Edit>
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "view",
+        element: <PrivateRouter><View></View></PrivateRouter>,
+      },
+      {
+        path: "married",
+        element: <PrivateRouter><Married></Married></PrivateRouter>,
+      },
+      {
+        path: "my-contact-request",
+        element: <PrivateRouter><MyContactRequest></MyContactRequest></PrivateRouter>,
+      },
+      {
+        path: "my-favorite",
+        element: <PrivateRouter><MyFavorite></MyFavorite></PrivateRouter>,
+      },
 
-export default routes
+      {
+        path: "profile",
+        element: <PrivateRouter><Profile></Profile></PrivateRouter>,
+      },
+    ],
+  },
+]);
+
+export default routes;

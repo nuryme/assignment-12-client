@@ -3,23 +3,56 @@ import height from "../../assets/height.png";
 import { BsEnvelopeArrowUp } from "react-icons/bs";
 import SectionTitleFlower from "../../shared components/SectionTitleFlower";
 import Swal from "sweetalert2";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "./../../hooks/useAxiosSecure";
 import useAuthInfo from "../../hooks/useAuthInfo";
 import Loading from "../Loading";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
 
 const View = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuthInfo();
 
-  const { data: bio = {}, isLoading } = useQuery({
+  const { data: bio = {}, isLoading, refetch } = useQuery({
     queryKey: ["view-bio"],
     queryFn: async () =>
       await axiosSecure.get(`/view-bio/${user?.email}`).then((res) => res.data),
   });
+  const {data: requestedUser} = useQuery({
+    queryKey: ['users'],
+    queryFn: async () => await axiosSecure.get(`/user/${user?.email}`).then(res => res.data)
+  })
+// console.log(requestedUser)
+  const {mutate} = useMutation({
+    mutationKey: ['bio-data'],
+    mutationFn: async () => axiosSecure.patch(`/make-premium/${user?.email}?isPremium=request&bioId=${bio.bioId}`).then(res => res.data),
+    onSuccess: (data) => {
+      if(data.modifiedCount > 0) {
+        toast.success('Request to make premium send Successfully')
+        refetch()
+      }
+    },
+    onError: (err) => {
+      toast.error(err.message)
+    }
+    
+    
+  })
+
+
 
   const handlePremium = () => {
+
+    if(requestedUser?.isPremium === "request" ) {
+      return toast.error('Already requested. Please wait for the approval')
+    }
+    else if(requestedUser?.isPremium === 'premium' ) {
+      return toast.error('Already premium')
+    }
+  
+
+
     Swal.fire({
       title: "Are you sure to make you premium?",
       showCancelButton: true,
@@ -27,16 +60,24 @@ const View = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes!",
     }).then((result) => {
+
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your file has been deleted.",
-          icon: "success",
-        });
+
+      
+        // Swal.fire({
+        //   title: "Deleted!",
+        //   text: "Your file has been deleted.",
+        //   icon: "success",
+        // });
+
+
+
+        mutate()
+
       }
     });
   };
-
+// console.log(bio)
   if (isLoading) return <Loading></Loading>;
 
   return (

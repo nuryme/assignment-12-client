@@ -1,20 +1,30 @@
 import height from "../../assets/height.png";
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Loading from "../Loading";
 import ErrorPage from "../ErrorPage";
 import { format } from "date-fns";
 import useAllBio from "../../hooks/useAllBio";
+import toast from "react-hot-toast";
+import useAuthInfo from "../../hooks/useAuthInfo";
+import { CiMobile4 } from "react-icons/ci";
+import { BsEnvelopeArrowUp } from "react-icons/bs";
 
 const Details = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
+  const { user, loading: emailLoading } = useAuthInfo();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["bio-data", id],
     queryFn: async () =>
       await axiosSecure.get(`/bio-data/${id}`).then((res) => res.data),
+  });
+  const { data: userPremium, isLoading: loadingUser } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () =>
+      await axiosSecure.get(`/user/${user?.email}`).then((res) => res.data),
   });
 
   // console.log(data?.type)
@@ -23,18 +33,43 @@ const Details = () => {
     type: data?.type,
   });
 
-  const handleFavorite = (id) => {
-    console.log(id)
-  }
-  
+  // favorite
 
+  const {
+    data: favorite,
+    isLoading: favoriteLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["favorite"],
+    queryFn: async () =>
+      await axiosSecure.get(`/favorite/${user?.email}`).then((res) => res.data),
+  });
 
-  if (isLoading || loading) return <Loading></Loading>;
+  const favoriteExist = favorite?.find((fav) => fav.bioId === id);
+  // console.log(favorite);
+  const { mutate } = useMutation({
+    mutationKey: ["favorite"],
+    mutationFn: async (data) =>
+      await axiosSecure.post(`/favorite`, data).then((res) => res.data),
+    onSuccess: (data) => {
+      // console.log(data);
+      if (data.insertedId) {
+        toast.success("Added to favorite");
+        refetch();
+      }
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
+
+  if (isLoading || loading || favoriteLoading || loadingUser || emailLoading)
+    return <Loading></Loading>;
 
   if (isError) return <ErrorPage></ErrorPage>;
 
   // console.log(bio_data);
-  // console.log(data);
+  // console.log(userPremium);
   return (
     <div className="my-24">
       <div className="space-y-6 sm:space-y-12">
@@ -108,25 +143,31 @@ const Details = () => {
               </div>
             </div>
 
-            {/* <h5 className="uppercase mt-12">contact information</h5>
-            <div className="mt-2 space-y-2">
-              <div className="flex items-center gap-4">
-                <div className=" border border-secondary p-3 rounded-lg w-fit">
-                  <CiMobile4 className="text-lg" />
-                </div>
-                <p className="font-bold">
-                  Phone: <span className="font-normal">+{data.number}</span>
-                </p>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className=" border border-secondary p-3 rounded-lg w-fit">
-                  <BsEnvelopeArrowUp className="text-lg" />
-                </div>
-                <p className="font-bold">
-                  Email: <span className="font-normal">{data.email}</span>
-                </p>
-              </div>
-            </div> */}
+            {userPremium?.isPremium === "premium" &&
+               (
+                <>
+                  <h5 className="uppercase mt-12">contact information</h5>
+                  <div className="mt-2 space-y-2">
+                    <div className="flex items-center gap-4">
+                      <div className=" border border-secondary p-3 rounded-lg w-fit">
+                        <CiMobile4 className="text-lg" />
+                      </div>
+                      <p className="font-bold">
+                        Phone:{" "}
+                        <span className="font-normal">+{data.number}</span>
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className=" border border-secondary p-3 rounded-lg w-fit">
+                        <BsEnvelopeArrowUp className="text-lg" />
+                      </div>
+                      <p className="font-bold">
+                        Email: <span className="font-normal">{data.email}</span>
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
 
             <h5 className="uppercase mt-12">Personal information</h5>
             <div className="mt-2 space-y-2 grid grid-cols-1 md:grid-cols-2">
@@ -162,16 +203,32 @@ const Details = () => {
 
             <div className="mt-6 space-x-6">
               <Link>
-                <button onClick={() => {
-                  handleFavorite(data.bioId)
-                }
-                } className="primaryBtn">💕 add to favorite</button>
-              </Link>
-              <Link to={`/checkout/${id}`}>
-                <button className="secondaryBtn">
-                  🌸 request contact information
+                <button
+                  onClick={() => {
+                    if (favoriteExist) {
+                      return toast.error("Already exist in favorite");
+                    } else {
+                      mutate({
+                        name: data.name,
+                        bioId: id,
+                        permanent_address: data.permanent_address,
+                        occupation: data.occupation,
+                        email: user?.email,
+                      });
+                    }
+                  }}
+                  className="primaryBtn"
+                >
+                  💕 add to favorite
                 </button>
               </Link>
+              {userPremium?.isPremium !== "premium" && data.email !== user?.email && (
+                  <Link to={`/checkout/${id}`}>
+                    <button className="secondaryBtn">
+                      🌸 request contact information
+                    </button>
+                  </Link>
+                )}
             </div>
           </div>
         </div>
@@ -189,7 +246,8 @@ const Details = () => {
               <div className="p-6 space-y-2">
                 <h3 className="text-2xl font-semibold ">{bio.name}</h3>
                 <span className="">
-                  <span className="text-black font-bold">Birth date: </span>{format(new Date(data.date_of_birth), "MM/dd/yyyy")}
+                  <span className="text-black font-bold">Birth date: </span>
+                  {format(new Date(data.date_of_birth), "MM/dd/yyyy")}
                 </span>
               </div>
             </div>

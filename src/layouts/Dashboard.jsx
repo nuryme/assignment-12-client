@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import DashboardNav from "../shared components/dashboardNav";
 
 const Dashboard = () => {

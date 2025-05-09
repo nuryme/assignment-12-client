@@ -2,8 +2,10 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuthInfo from "../../hooks/useAuthInfo";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import Loading from './../Loading';
+import { useNavigate } from "react-router-dom";
 
 const CheckoutForm = ({bioId}) => {
   const stripe = useStripe();
@@ -13,6 +15,7 @@ const CheckoutForm = ({bioId}) => {
   const [clientSecret, setClientSecret] = useState("");
   const { user } = useAuthInfo();
   const [transId, setTransId] = useState("");
+  const navigate = useNavigate()
 
   useEffect(() => {
     axiosSecure.post("/create-payment-intent", { money: 5 }).then((res) => {
@@ -21,6 +24,14 @@ const CheckoutForm = ({bioId}) => {
     });
   }, [axiosSecure]);
 
+  const {data: payments, isLoading} = useQuery({
+    queryKey: ['my-contact-request'],
+    queryFn: async () => axiosSecure.get('/my-contact-request').then(res => res.data)
+  })
+const paymentExist = payments?.find(pay => pay.bioId === parseInt(bioId ))
+
+console.log(payments)
+console.log(paymentExist)
   const {mutate} = useMutation({
     mutationKey: ['payments'],
     mutationFn: async (data) => await axiosSecure.post('/payments', data).then(res => res.data),
@@ -28,6 +39,7 @@ const CheckoutForm = ({bioId}) => {
       // console.log(data)
       if(data.insertedId) {
         toast.success('Payment Successful!')
+        navigate('/dashboard/my-contact-request')
       }
     },
     onError: (err) => {
@@ -49,6 +61,11 @@ const CheckoutForm = ({bioId}) => {
     if (card === null) {
       return;
     }
+
+    if(paymentExist) {
+      return toast.error('You already requested for this bio data. Please wait for the approval!')
+    }
+
 
     const { error } = await stripe.createPaymentMethod({
       type: "card",
@@ -86,15 +103,18 @@ const CheckoutForm = ({bioId}) => {
           amount: 5,
           transactionId: paymentIntent.id,
           status: 'pending',
-          email: user?.email
+          email: user?.email,
+          name: user?.displayName
         }
 
-        mutate(payment)
+          mutate(payment)
       }
     }
   };
 
-  console.log(transId);
+  // console.log(transId);
+
+  if(isLoading) return <Loading></Loading>
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center">
       <CardElement
