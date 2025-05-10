@@ -40,7 +40,7 @@ const Married = () => {
 
   return (
     <div className="">
-      <SectionTitleFlower title="edit bio data"></SectionTitleFlower>
+      <SectionTitleFlower title="your marriage story"></SectionTitleFlower>
       <form
         onSubmit={handleSubmit}
         noValidate=""
