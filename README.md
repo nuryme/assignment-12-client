@@ -7,23 +7,35 @@
 # Admin email: faria@example.com
 # Admin password: asdfasdf
 
-🌟 Website Features
-🔐 Secure Authentication using Firebase with Email/Password and Google Sign-in options.
+## 🌟 Features
 
-📱 Fully Responsive Design for mobile, tablet, and desktop views without using DaisyUI.
+- 🔐 **Secure Authentication**  
+  Firebase authentication with Email/Password and Google Sign-in support, protected with JWT for secure access.
 
-📄 Dynamic Biodata Management allowing users to create, edit, and publish biodatas with unique auto-generated biodata IDs.
+- 📱 **Fully Responsive Design**  
+  Optimized for mobile, tablet, and desktop screens. Built without DaisyUI for a fully custom layout.
 
-💎 Premium Member System where users can request to become premium and gain access to contact information.
+- 📄 **Dynamic Biodata Management**  
+  Users can create, edit, and publish biodatas with auto-generated unique Biodata IDs from the server.
 
-🎯 Advanced Filtering & Sorting for biodatas by age, division, and gender, with both client-side and server-side sorting options.
+- 💎 **Premium Membership System**  
+  Users can request premium access to unlock private biodata contact information, subject to admin approval.
 
-❤️ Favourite Biodata Feature to bookmark and manage potential matches for future reference.
+- 🎯 **Advanced Filtering & Sorting**  
+  Biodatas can be filtered by age range, gender, and division, with ascending/descending sorting options.
 
-💳 Stripe Payment Integration to securely request biodata contact information.
+- ❤️ **Favourites Feature**  
+  Users can save and manage their favourite biodatas for easier tracking of preferred profiles.
 
-📈 Admin Dashboard with Analytics including biodata counts, revenue tracking, and pie charts for visual insights.
+- 💳 **Stripe Payment Integration**  
+  Users can securely purchase contact information access using Stripe payment on a private checkout route.
 
-🥂 Success Story Submission by users, which is displayed publicly after admin approval to inspire others.
+- 📊 **Admin Dashboard with Analytics**  
+  Displays key metrics like total biodatas, male/female distribution, premium members, and total revenue with pie chart visualization.
 
-🔄 Protected Private Routes using JWT, with persistent login and no redirection to login page on refresh.
+- 🥂 **Success Story Submission**  
+  Married users can submit their success stories with images and reviews, which appear on the homepage upon admin approval.
+
+- 🔒 **Protected Private Routes**  
+  Routes such as Dashboard, View Biodata, Checkout, and Details pages are all protected using JWT with persistent login state.
+``
