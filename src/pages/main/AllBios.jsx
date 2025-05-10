@@ -106,7 +106,6 @@ const AllBios = () => {
                 onChange={(e) => {
                   setAddress(e.target.value);
                 }}
-                value={address}
                 defaultValue={""}
                 className="bg-white p-2 w-full rounded-md capitalize"
                 name=""

@@ -5,6 +5,7 @@ const Card = ({ bio, isLoading }) => {
   if (isLoading) return <Loading></Loading>;
 
   // console.log(bio);
+  if(!bio) return {}
   return (
     <div className="w-full max-w-md bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200 flex flex-col group">
       <div className="h-56 overflow-hidden">

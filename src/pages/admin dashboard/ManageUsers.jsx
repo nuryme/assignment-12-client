@@ -13,7 +13,6 @@ const ManageUsers = () => {
     data: users = {},
     refetch,
     isLoading,
-    isPending,
   } = useQuery({
     queryKey: ["users", search],
     queryFn: async () =>
@@ -46,7 +45,6 @@ const ManageUsers = () => {
   };
 
   // console.log(search);
-  if (isLoading || isPending) return <Loading></Loading>;
 
   return (
     <div>
@@ -80,65 +78,75 @@ const ManageUsers = () => {
                 <th className="p-3">action</th>
               </tr>
             </thead>
-            <tbody>
-              {users?.map((user) => (
-                <tr
-                  key={user._id}
-                  className="border-b border-opacity-20 border-primary bg-secondary/30"
-                >
-                  <td className="px-3 py-6">
-                    <p>{user.name}</p>
-                  </td>
-                  <td className="px-3 py-6">
-                    <p>{user.email}</p>
-                  </td>
-                  <td className="px-3 py-6 text-left">
-                    <button
-                      onClick={() => {
-                        if (user.role === "admin") {
-                          toast.error("Already admin!");
-                        } else {
-                          mutate({
-                            email: user.email,
-                            action: "isAdmin",
-                            action_value: "admin",
-                          });
-                        }
-                        // console.log(user.email)
-                      }}
-                      className="px-3 py-1 font-semibold  cursor-pointer rounded-md bg-secondary"
-                    >
-                      <span>
-                        {user.role === "admin" ? "admin" : "make admin"}
-                      </span>
-                    </button>
-                  </td>
-                  <td className="px-3 py-6 text-left">
-                    <button
-                      onClick={() => {
-                        if (user.isPremium === "premium") {
-                          toast.error("Already premium!");
-                        } else {
-                          mutate({
-                            email: user.email,
-                            action: "isPremium",
-                            action_value: "premium",
-                          });
-                        }
-                        // console.log(user.email)
-                      }}
-                      className="px-3 py-1 font-semibold  cursor-pointer rounded-md bg-secondary"
-                    >
-                      <span>
-                        {user.isPremium === "premium"
-                          ? "premium"
-                          : " make premium"}
-                      </span>
-                    </button>
+            {isLoading ? (
+              <tbody>
+                <tr>
+                  <td>
+                    <h4 className="text-red-600">Loading...</h4>
                   </td>
                 </tr>
-              ))}
-            </tbody>
+              </tbody>
+            ) : (
+              <tbody>
+                {users?.map((user) => (
+                  <tr
+                    key={user._id}
+                    className="border-b border-opacity-20 border-primary bg-secondary/30"
+                  >
+                    <td className="px-3 py-6">
+                      <p>{user.name}</p>
+                    </td>
+                    <td className="px-3 py-6">
+                      <p>{user.email}</p>
+                    </td>
+                    <td className="px-3 py-6 text-left">
+                      <button
+                        onClick={() => {
+                          if (user.role === "admin") {
+                            toast.error("Already admin!");
+                          } else {
+                            mutate({
+                              email: user.email,
+                              action: "isAdmin",
+                              action_value: "admin",
+                            });
+                          }
+                          // console.log(user.email)
+                        }}
+                        className="px-3 py-1 font-semibold  cursor-pointer rounded-md bg-secondary"
+                      >
+                        <span>
+                          {user.role === "admin" ? "admin" : "make admin"}
+                        </span>
+                      </button>
+                    </td>
+                    <td className="px-3 py-6 text-left">
+                      <button
+                        onClick={() => {
+                          if (user.isPremium === "premium") {
+                            toast.error("Already premium!");
+                          } else {
+                            mutate({
+                              email: user.email,
+                              action: "isPremium",
+                              action_value: "premium",
+                            });
+                          }
+                          // console.log(user.email)
+                        }}
+                        className="px-3 py-1 font-semibold  cursor-pointer rounded-md bg-secondary"
+                      >
+                        <span>
+                          {user.isPremium === "premium"
+                            ? "premium"
+                            : " make premium"}
+                        </span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            )}
           </table>
         </div>
       </div>

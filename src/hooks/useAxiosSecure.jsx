@@ -4,7 +4,7 @@ import useAuthInfo from "./useAuthInfo";
 import { useEffect } from "react";
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: 'https://assignment-12-server-ruddy-five.vercel.app',
     withCredentials: true
 })
 const useAxiosSecure = () => {

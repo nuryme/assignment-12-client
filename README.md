@@ -1,12 +1,29 @@
-# React + Vite
+# Matrimony
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Live Link
 
-Currently, two official plugins are available:
+- https://matrimony-assingment-12.netlify.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Admin email: faria@example.com
+# Admin password: asdfasdf
 
-## Expanding the ESLint configuration
+🌟 Website Features
+🔐 Secure Authentication using Firebase with Email/Password and Google Sign-in options.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+📱 Fully Responsive Design for mobile, tablet, and desktop views without using DaisyUI.
+
+📄 Dynamic Biodata Management allowing users to create, edit, and publish biodatas with unique auto-generated biodata IDs.
+
+💎 Premium Member System where users can request to become premium and gain access to contact information.
+
+🎯 Advanced Filtering & Sorting for biodatas by age, division, and gender, with both client-side and server-side sorting options.
+
+❤️ Favourite Biodata Feature to bookmark and manage potential matches for future reference.
+
+💳 Stripe Payment Integration to securely request biodata contact information.
+
+📈 Admin Dashboard with Analytics including biodata counts, revenue tracking, and pie charts for visual insights.
+
+🥂 Success Story Submission by users, which is displayed publicly after admin approval to inspire others.
+
+🔄 Protected Private Routes using JWT, with persistent login and no redirection to login page on refresh.
